@@ -1,68 +1,53 @@
-# Insurance Cost Prediction Using Machine Learning
+# 💰 Insurance Cost Prediction System
 
-## Overview
+This project predicts medical insurance costs using Machine Learning and provides risk analysis and cost optimization suggestions.
 
-This project predicts a person’s insurance charges using machine learning based on age, BMI, smoking status, children, sex, and region.
+---
 
-## Features
+## 🚀 Features
 
-* Predict insurance cost instantly
-* Clean professional UI
-* Multiple ML models tested
-* Best model selected (XGBoost)
-* Streamlit deployment
-* GitHub ready repository
+- Predict insurance cost
+- Risk classification (Low / Medium / High)
+- Premium optimization suggestions
+- Fair pricing analysis
 
-## Technologies Used
+---
 
-* Python
-* Pandas
-* NumPy
-* Scikit-learn
-* XGBoost
-* Streamlit
+## 🧠 Tech Stack
 
-## Dataset Columns
+- Python
+- Scikit-learn
+- XGBoost
+- Streamlit
 
-* Age
-* Sex
-* BMI
-* Children
-* Smoker
-* Region
-* Charges
+---
 
-## Models Used
+## 📊 Input Features
 
-* Linear Regression
-* Random Forest
-* XGBoost
+- Age
+- BMI
+- Children
+- Smoking status
+- Region
 
-## Project Structure
+---
 
-```text
-insurance-cost-prediction/
-├── app.py
-├── train.py
-├── requirements.txt
-├── README.md
-├── data/
-├── models/
-└── assets/
-```
+## 📈 Output
 
-## How to Run
+- Predicted Insurance Cost
+- Risk Level
+- Recommendations
 
-```bash
-pip install -r requirements.txt
-python train.py
-streamlit run app.py
-```
+---
 
-## Output
+## ▶️ Run Locally
 
-Users enter their details and get predicted insurance cost instantly.
+pip install -r requirements.txt  
+python train.py  
+streamlit run app.py  
 
-## Author
+---
 
-Your Name
+## 🌐 Deployment
+
+Deployed using Streamlit Cloud
