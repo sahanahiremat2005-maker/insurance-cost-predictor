@@ -1,74 +1,45 @@
 import streamlit as st
-import pandas as pd
 import joblib
+import os
 
-# Page setup
-st.set_page_config(
-    page_title="Insurance Cost Predictor",
-    page_icon="💰",
-    layout="wide"
-)
+st.set_page_config(page_title="Insurance Predictor", page_icon="💰")
 
-# Load model
-model = joblib.load("models/model.pkl")
+# UI
+st.markdown("## 💰 Insurance Cost Prediction")
+st.markdown("---")
 
-# Custom style
-st.markdown("""
-<style>
-.main {
-    padding: 2rem;
-}
-.stButton>button {
-    width: 100%;
-    border-radius: 10px;
-    height: 3em;
-    font-size: 18px;
-}
-.result-box {
-    padding: 20px;
-    border-radius: 12px;
-    background: #eafaf1;
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-}
-</style>
-""", unsafe_allow_html=True)
+# If model missing → train
+if not os.path.exists("model.pkl"):
+    import train
 
-# Title
-st.title("💰 Insurance Cost Prediction")
-st.caption("Predict insurance charges instantly using Machine Learning")
+model = joblib.load("model.pkl")
 
-# Layout
-col1, col2 = st.columns(2)
+# Inputs
+age = st.slider("Age", 18, 65, 30)
+bmi = st.slider("BMI", 15.0, 40.0, 25.0)
+children = st.slider("Children", 0, 5, 1)
 
-with col1:
-    age = st.slider("Age", 18, 64, 30)
-    bmi = st.slider("BMI", 15.0, 50.0, 25.0)
-    children = st.selectbox("Children", [0,1,2,3,4,5])
+sex = st.selectbox("Sex", ["male", "female"])
+smoker = st.selectbox("Smoker", ["yes", "no"])
+region = st.selectbox("Region", ["northeast","northwest","southeast","southwest"])
 
-with col2:
-    sex = st.selectbox("Gender", ["male", "female"])
-    smoker = st.selectbox("Smoker", ["yes", "no"])
-    region = st.selectbox(
-        "Region",
-        ["northeast", "northwest", "southeast", "southwest"]
-    )
+# Encoding
+sex_val = 1 if sex == "male" else 0
+smoker_val = 1 if smoker == "yes" else 0
+region_map = {"northeast":0,"northwest":1,"southeast":2,"southwest":3}
+region_val = region_map[region]
 
-# Predict button
-if st.button("Predict Insurance Cost"):
-    data = pd.DataFrame([{
-        "age": age,
-        "sex": sex,
-        "bmi": bmi,
-        "children": children,
-        "smoker": smoker,
-        "region": region
-    }])
+# Features
+bmi_category = 0 if bmi<18.5 else 1 if bmi<25 else 2 if bmi<30 else 3
+risk_score = age*0.2 + bmi*0.3 + smoker_val*5
+bmi_smoker = bmi * smoker_val
 
-    prediction = model.predict(data)[0]
+if st.button("💸 Predict Cost"):
+    pred = model.predict([[age,bmi,children,sex_val,smoker_val,region_val,
+                           bmi_category,risk_score,bmi_smoker]])[0]
 
-    st.markdown(
-        f'<div class="result-box">Estimated Cost: ${prediction:,.2f}</div>',
-        unsafe_allow_html=True
-    )
+    # Risk
+    risk = "Low" if pred<10000 else "Medium" if pred<20000 else "High"
+
+    st.success(f"💰 Cost: ₹{pred:,.2f}")
+    st.info(f"⚠️ Risk: {risk}")
